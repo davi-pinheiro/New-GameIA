@@ -12,8 +12,10 @@
 #include "tempo.h"
 #include "camera.h"
 #include "denteAlho.h"
+#include "backMap.h"
 
-
+using std::cout;
+using std::endl;
 using std::rand;
 using std::cerr;
 using std::vector;
@@ -28,23 +30,28 @@ int main(int argc, char const *argv[])
 {
     
     Camera camera(MAPAW, MAPAH, LARGURA, ALTURA);
-    Tempo tempo(15);
+    Tempo tempo(180);
 
-    CollectibleCollection* colecaoCollectible = new CollectibleCollection;
+    BackMap backMap;
+    backMap.generateAreas(MAPAH, 3);
+    backMap.updateAreas(camera);
+    backMap.generateEntities();
+
+    /*CollectibleCollection* colecaoCollectible = new CollectibleCollection;
     colecaoCollectible->generateCollectibles(MAPAH, MAPAW);
 
     MonsterCollection* colecaoMonster = new MonsterCollection;
     colecaoMonster->generateMonsters(MAPAH, MAPAW);
 
     AllyCollection* colecaoAlly = new AllyCollection;
-    colecaoAlly->generateAllies(MAPAH, MAPAW);
+    colecaoAlly->generateAllies(MAPAH, MAPAW);*/
     
     Personagem* personagem = new Personagem(50, 5, 3, false, 20, 20, MAPAW/2, MAPAH/2, NONE);
-    colecaoAlly->getAllyCollection().push_back(personagem);
+    /*colecaoAlly->getAllyCollection().push_back(personagem);
     
     colecaoMonster->setInimigos(colecaoAlly->getAllyCollection());
     //
-    colecaoAlly->setInimigos(colecaoMonster->getMonsterCollection());
+    colecaoAlly->setInimigos(colecaoMonster->getMonsterCollection());*/
     //
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -59,14 +66,15 @@ int main(int argc, char const *argv[])
         {
             controle(personagem, evento, camera);
         }
-            
+        backMap.updateAreas(camera);
+
         SDL_SetRenderTarget(janela.getRenderizador(), janela.getTextura());
         janela.backgroundColor(tempo);
         
-        janela.renderizarCollectibles(colecaoCollectible->getCollectibleCollection(), camera);
+        janela.renderizarCollectibles(backMap);
         janela.renderizarCharacter(personagem);
-        janela.renderizarMonsters(colecaoMonster->getMonsterCollection(), camera);
-        janela.renderizarAllies(colecaoAlly->getAllyCollection(), camera);
+        janela.renderizarMonsters(backMap);
+        //janela.renderizarAllies(backMap);
         
         SDL_SetRenderTarget(janela.getRenderizador(), NULL);
         SDL_RenderCopy(janela.getRenderizador(), janela.getTextura(),camera.getCamera(), camera.getFilme());

@@ -9,6 +9,7 @@
 #include "tempo.h"
 #include "personagem.h"
 #include "camera.h"
+#include "backMap.h"
 
 using std::vector;
 
@@ -40,6 +41,9 @@ public:
     void renderizarMonsters(vector<Vivo*>& colecao, Camera& camera);
     void renderizarAllies(vector<Vivo*>& colecao, Camera& camera);
     void renderizarCollectibles(vector<Coletavel*>& colecao, Camera& camera);
+
+    void renderizarMonsters(BackMap &backMap);
+    void renderizarCollectibles(BackMap &backMap);
 
     void renderizarCharacter(Personagem* personagem);
 

@@ -1118,6 +1118,50 @@ void Janela::renderizarCharacter(Personagem* personagem)
     SDL_RenderFillRect(renderizador, personagem->getPersonagem());
 }
 
+void Janela::renderizarMonsters(BackMap &backMap)
+{
+    for(int i = 0; i < backMap.tamanhoVectorAreas(); i++)
+    {
+        if(backMap.retornarAreas(i)->isAtivo())
+        {
+            for(int j = 0; j < backMap.tamanhoVectorVivos(); j++)
+            {
+                if((backMap.retornarVivos(j)->getPersonagem()->x >= backMap.retornarAreas(i)->getX())&&
+                (backMap.retornarVivos(j)->getPersonagem()->x <  backMap.retornarAreas(i)->getX() + backMap.retornarAreas(i)->getW()))
+                {
+                    if((backMap.retornarVivos(j)->getPersonagem()->y >= backMap.retornarAreas(i)->getY())&&
+                    (backMap.retornarVivos(j)->getPersonagem()->y <  backMap.retornarAreas(i)->getY() + backMap.retornarAreas(i)->getH()))
+                    {
+                        backMap.retornarVivos(j)->machine();
+                        renderizar(backMap.retornarVivos(j));
+                    }
+                }
+            }
+        }
+    }
+}
+void Janela::renderizarCollectibles(BackMap &backMap)
+{
+    for(int i = 0; i < backMap.tamanhoVectorAreas(); i++)
+    {
+        if(backMap.retornarAreas(i)->isAtivo())
+        {
+            for(int j = 0; j < backMap.tamanhoVectorColetaveis(); j++)
+            {
+                if((backMap.retornarColetaveis(j)->getColetavel()->x >= backMap.retornarAreas(i)->getX())&&
+                (backMap.retornarColetaveis(j)->getColetavel()->x <  backMap.retornarAreas(i)->getX() + backMap.retornarAreas(i)->getW()))
+                {
+                    if((backMap.retornarColetaveis(j)->getColetavel()->y >= backMap.retornarAreas(i)->getY())&&
+                    (backMap.retornarColetaveis(j)->getColetavel()->y <  backMap.retornarAreas(i)->getY() + backMap.retornarAreas(i)->getH()))
+                    {
+                        renderizar(backMap.retornarColetaveis(j));
+                    }
+                }
+            }
+        }
+    }
+}
+
 Janela::~Janela()
 {
     SDL_DestroyTexture(textura);

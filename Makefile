@@ -3,7 +3,7 @@ INCLUDE = -Ibuild
 FLAGS = -Wall -pedantic -g -ansi -Iinclude
 PROGRAMA = main
 
-OBJ = build/vivo.o build/main.o build/vampiro.o build/janela.o build/rgba.o build/monsterCollection.o build/tempo.o build/personagem.o build/allyCollection.o build/guerreiro.o build/controle.o build/camera.o build/coletavel.o build/denteAlho.o build/collectibleCollection.o
+OBJ = build/vivo.o build/main.o build/vampiro.o build/janela.o build/rgba.o build/monsterCollection.o build/tempo.o build/personagem.o build/allyCollection.o build/guerreiro.o build/controle.o build/camera.o build/coletavel.o build/denteAlho.o build/collectibleCollection.o build/backMap.o build/area.o build/subArea.o
 
 bin/$(PROGRAMA): $(OBJ)
 	g++ -o $@ $^ `sdl2-config --cflags --libs`
@@ -51,6 +51,15 @@ build/denteAlho.o: src/denteAlho.cpp
 	$(GPP) $(FLAGS) -c -o $@ $^
 
 build/collectibleCollection.o: src/collectibleCollection.cpp
+	$(GPP) $(FLAGS) -c -o $@ $^
+
+build/backMap.o: src/backMap.cpp
+	$(GPP) $(FLAGS) -c -o $@ $^
+
+build/area.o: src/area.cpp
+	$(GPP) $(FLAGS) -c -o $@ $^
+
+build/subArea.o: src/subArea.cpp
 	$(GPP) $(FLAGS) -c -o $@ $^
 
 clean_obj:
