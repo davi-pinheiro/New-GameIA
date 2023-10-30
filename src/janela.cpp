@@ -1116,6 +1116,8 @@ void Janela::renderizarCharacter(Personagem* personagem)
 {
     frontgroundColor(personagem->getRgba());
     SDL_RenderFillRect(renderizador, personagem->getPersonagem());
+    frontgroundColor(Rgba(0,0,0,0));
+    SDL_RenderDrawRect(renderizador, personagem->getPersonagem());
 }
 
 void Janela::renderizarMonsters(BackMap &backMap)
@@ -1132,7 +1134,18 @@ void Janela::renderizarMonsters(BackMap &backMap)
                     if((backMap.retornarVivos(j)->getPersonagem()->y >= backMap.retornarAreas(i)->getY())&&
                     (backMap.retornarVivos(j)->getPersonagem()->y <  backMap.retornarAreas(i)->getY() + backMap.retornarAreas(i)->getH()))
                     {
-                        backMap.retornarVivos(j)->machine();
+                        switch (backMap.retornarVivos(j)->getId())
+                        {
+                        case 1:
+                            ((Vampiro*)backMap.retornarVivos(j))->machine();
+                            break;
+                        case 2:
+                            ((Guerreiro*)backMap.retornarVivos(j))->machine();
+                        
+                        default:
+                            break;
+                        }
+                        //((Vampiro*)backMap.retornarVivos(j))->machine();
                         renderizar(backMap.retornarVivos(j));
                     }
                 }

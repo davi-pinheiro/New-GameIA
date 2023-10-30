@@ -9,7 +9,7 @@ class Personagem : public Vivo
 private:
     /* data */
 public:
-    Personagem(int vidaMaxima, int velocidade, int forca, bool inimigo , int h, int w, int x, int y, State estado);
+    Personagem(int id, int vidaMaxima, int velocidade, int forca, bool inimigo , int h, int w, int x, int y, State estado);
 
     void machine(void);
 };

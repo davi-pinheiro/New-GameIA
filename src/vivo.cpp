@@ -1,6 +1,7 @@
 #include "vivo.h"
 
-Vivo::Vivo(int vidaMaxima, int velocidade, int forca, bool isEnemy , int h, int w, int x, int y, Rgba rgba, State estado){
+Vivo::Vivo(int id, int vidaMaxima, int velocidade, int forca, bool isEnemy , int h, int w, int x, int y, Rgba rgba, State estado){
+    this->id = id;
     this->vidaMaxima = vidaMaxima;
     this->vida = vidaMaxima;
     this->velocidade = velocidade;
@@ -14,6 +15,11 @@ Vivo::Vivo(int vidaMaxima, int velocidade, int forca, bool isEnemy , int h, int 
     personagem.y = y;
 
     this->rgba = rgba;
+}
+
+int Vivo::getId(void)
+{
+    return id;
 }
 
 int Vivo::getVidaMaxima(void){
@@ -44,6 +50,11 @@ vector<Vivo*> Vivo::getInimigos(void)
 State Vivo::getEstado()
 {
     return estado;
+}
+
+void Vivo::setId(int id)
+{
+    this->id = id;
 }
 
 void Vivo::setVidaMaxima(int vidaMaxima){

@@ -12,7 +12,7 @@ class Vampiro : public Vivo
 private:
     
 public:
-    Vampiro(int vidaMaxima, int velocidade, int forca, bool inimigo , int h, int w, int x, int y, State estado);
+    Vampiro(int id, int vidaMaxima, int velocidade, int forca, bool inimigo , int h, int w, int x, int y, State estado);
     bool isNextToEnemy();
     bool isAttackCondition();
     void moveToPlayer();

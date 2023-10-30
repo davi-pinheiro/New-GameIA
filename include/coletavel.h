@@ -7,10 +7,11 @@
 class Coletavel
 {
 protected:
+    int id;
     SDL_Rect coletavel;
     Rgba rgba;
 public:
-    Coletavel(int x, int y, int w, int h, Rgba rgba);
+    Coletavel(int id, int x, int y, int w, int h, Rgba rgba);
 
     SDL_Rect* getColetavel(void);
     Rgba getRgba(void);

@@ -44,7 +44,7 @@ void MonsterCollection::generateMonsters(int altura, int largura)
             }
         }while (possible);
 
-        Vampiro* dracula = new Vampiro(50, 5, 3, true, 20, 20, x, y, VAGAR);
+        Vampiro* dracula = new Vampiro(1, 50, 5, 3, true, 20, 20, x, y, VAGAR);
         monsterCollection.push_back(dracula);
         
         possible = true;

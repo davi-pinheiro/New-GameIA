@@ -45,7 +45,7 @@ void CollectibleCollection::generateCollectibles(int altura, int largura)
             }
         }while (possible);
 
-        collectibleCollection->push_back(new DenteAlho(x, y, 10, 10));
+        collectibleCollection->push_back(new DenteAlho(1, x, y, 10, 10));
         
         possible = true;
     }

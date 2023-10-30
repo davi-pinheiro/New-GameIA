@@ -7,7 +7,7 @@ class DenteAlho : public Coletavel
 {
     private:
     public:
-    DenteAlho(int x, int y, int w, int h);
+    DenteAlho(int id, int x, int y, int w, int h);
 };
 
 #endif

@@ -11,6 +11,7 @@ using std::vector;
 class Vivo
 {
 protected:
+    int id;
     int vidaMaxima;
     int vida;
     int velocidade;
@@ -22,8 +23,9 @@ protected:
 
     Rgba rgba;
 public:
-    Vivo(int vidaMaxima, int velocidade, int forca, bool inimigo, int h, int w, int x, int y, Rgba rgba, State estado);
+    Vivo(int id, int vidaMaxima, int velocidade, int forca, bool inimigo, int h, int w, int x, int y, Rgba rgba, State estado);
 
+    int getId(void);
     int getVidaMaxima(void);
     int getVida(void);
     int getVelocidade(void);
@@ -32,6 +34,7 @@ public:
     vector<Vivo*> getInimigos(void);
     State getEstado(void);
 
+    void setId(int id);
     void setVidaMaxima(int vidaMaxima);
     void setVida(int vida);
     void setVelocidade(int velocidade);

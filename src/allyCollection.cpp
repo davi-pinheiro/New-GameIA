@@ -44,7 +44,7 @@ void AllyCollection::generateAllies(int altura, int largura)
             }
         }while (possible);
 
-        Guerreiro* cavaleiro = new Guerreiro(50, 5, 3, false, 20, 20, x, y, VAGAR);
+        Guerreiro* cavaleiro = new Guerreiro(2, 50, 5, 3, false, 20, 20, x, y, VAGAR);
         allyCollection.push_back(cavaleiro);
         
         possible = true;

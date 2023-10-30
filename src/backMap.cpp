@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 #include <ctime>
 #include <cstdlib>
 #include "backMap.h"
@@ -8,6 +9,8 @@
 #include "guerreiro.h"
 
 using std::rand;
+using std::cout;
+using std::endl;
 
 Area* BackMap::retornarAreas(int indice)
 {
@@ -40,7 +43,7 @@ void BackMap::generateAreas(int tamanhoMapa, int proporcaoArea)
     int tamanhoArea = tamanhoMapa / proporcaoArea;
     int tamanhoSubArea = 30;
     int numeroSubAreas = tamanhoArea / 30;
-    //int pontoInicial = 0;
+
     for(int i = 0; i < proporcaoArea; i++)
     {
         for (int j = 0; j < proporcaoArea; j++)
@@ -61,22 +64,25 @@ void BackMap::generateAreas(int tamanhoMapa, int proporcaoArea)
 
 void BackMap::generateEntities()
 {
-    int porcentagemInimigos = (pow((tamanhoMapa / 1), 2) / pow(20, 2)) * (1 / 100);
-    int porcentagemColetaveis = (pow((tamanhoMapa / 1), 2) / pow(10, 2)) * (1 / 100);
+    int porcentagemColetaveis = (pow(tamanhoMapa, 2) / pow(10, 2)) * 1 / 200;
+    int porcentagemInimigos = (pow(tamanhoMapa, 2) / pow(20, 2)) * 1 / 200;
+    int porcentagemAliados = (pow(tamanhoMapa, 2) / pow(20, 2)) * 1 / 400;
+    
     int x, y;
     int distancia = 0;
     bool possible = false;
+
     srand(time(NULL));
     for(int i = 0; i < porcentagemColetaveis; i++)
     {
         do
         {
             x = rand() % (tamanhoMapa - 9);
-            y = rand() % (tamanhoMapa - 99);
+            y = rand() % (tamanhoMapa - 9);
             for (int j = 0; j < (int) coletaveis.size(); j++)
             {
                 distancia = sqrt(pow(coletaveis[j]->getColetavel()->x - x, 2) + pow(coletaveis[j]->getColetavel()->y - y, 2));
-                if (distancia >= 30)
+                if (distancia >= 15)
                 {
                     if (j == (int)coletaveis.size() - 1)
                     {
@@ -90,10 +96,11 @@ void BackMap::generateEntities()
             }
         }while (possible);
 
-        coletaveis.push_back(new DenteAlho(x, y, 10, 10));
+        coletaveis.push_back(new DenteAlho(1, x, y, 10, 10));
         
         possible = true;
     }
+    possible = false;
     for (int i = 0; i < porcentagemInimigos; i++)
     {
         do
@@ -117,12 +124,13 @@ void BackMap::generateEntities()
             }
         }while (possible);
 
-        Vampiro* dracula = new Vampiro(50, 5, 3, true, 20, 20, x, y, VAGAR);
+        Vampiro* dracula = new Vampiro(1, 50, 5, 3, true, 20, 20, x, y, VAGAR);
         vivos.push_back(dracula);
         
         possible = true;
     }
-    for (int i = 0; i < porcentagemInimigos; i++)
+    possible = false;
+    for (int i = 0; i < porcentagemAliados; i++)
     {
         do
         {
@@ -145,7 +153,7 @@ void BackMap::generateEntities()
             }
         }while (possible);
 
-        Guerreiro* cavaleiro = new Guerreiro(50, 5, 3, false, 20, 20, x, y, VAGAR);
+        Guerreiro* cavaleiro = new Guerreiro(2, 50, 5, 3, false, 20, 20, x, y, VAGAR);
         vivos.push_back(cavaleiro);
         
         possible = true;

@@ -31,33 +31,18 @@ int main(int argc, char const *argv[])
     
     Camera camera(MAPAW, MAPAH, LARGURA, ALTURA);
     Tempo tempo(180);
+    Personagem* personagem = new Personagem(0, 50, 5, 3, false, 20, 20, MAPAW/2, MAPAH/2, NONE);
 
     BackMap backMap;
     backMap.generateAreas(MAPAH, 3);
     backMap.updateAreas(camera);
     backMap.generateEntities();
 
-    /*CollectibleCollection* colecaoCollectible = new CollectibleCollection;
-    colecaoCollectible->generateCollectibles(MAPAH, MAPAW);
-
-    MonsterCollection* colecaoMonster = new MonsterCollection;
-    colecaoMonster->generateMonsters(MAPAH, MAPAW);
-
-    AllyCollection* colecaoAlly = new AllyCollection;
-    colecaoAlly->generateAllies(MAPAH, MAPAW);*/
-    
-    Personagem* personagem = new Personagem(50, 5, 3, false, 20, 20, MAPAW/2, MAPAH/2, NONE);
-    /*colecaoAlly->getAllyCollection().push_back(personagem);
-    
-    colecaoMonster->setInimigos(colecaoAlly->getAllyCollection());
-    //
-    colecaoAlly->setInimigos(colecaoMonster->getMonsterCollection());*/
-    //
     SDL_Init(SDL_INIT_VIDEO);
 
     Janela janela(MAPAH, MAPAW, ALTURA, LARGURA);
     SDL_ShowWindow(janela.getJanela());
-    //Rgba rgba(0, 0, 0, 0);
+    
     SDL_Event* evento = new SDL_Event;
 
     while (!SDL_QuitRequested())
@@ -72,9 +57,8 @@ int main(int argc, char const *argv[])
         janela.backgroundColor(tempo);
         
         janela.renderizarCollectibles(backMap);
-        janela.renderizarCharacter(personagem);
         janela.renderizarMonsters(backMap);
-        //janela.renderizarAllies(backMap);
+        janela.renderizarCharacter(personagem);
         
         SDL_SetRenderTarget(janela.getRenderizador(), NULL);
         SDL_RenderCopy(janela.getRenderizador(), janela.getTextura(),camera.getCamera(), camera.getFilme());
