@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
+#include "efeito.h"
+#include "tipoMonstro.h"
 #include "rgba.h"
 #include "state.h"
 
@@ -16,37 +18,34 @@ protected:
     int vida;
     int velocidade;
     int forca;
-    bool isEnemy;
-    SDL_Rect personagem;
-    vector<Vivo*> inimigos;
-    State estado;
-
+    int raioVisao;
     Rgba rgba;
+    State estado;
+    SDL_Rect personagem;
+    TipoMonstro tipoMonstro;
+
+    vector<Efeito> efeitos;
 public:
-    Vivo(int id, int vidaMaxima, int velocidade, int forca, bool inimigo, int h, int w, int x, int y, Rgba rgba, State estado);
+    Vivo(int id, int vidaMaxima, int velocidade, int forca, int raioVisao, State estado, int h, int w, int x, int y, TipoMonstro tipoMonstro);
 
     int getId(void);
     int getVidaMaxima(void);
     int getVida(void);
     int getVelocidade(void);
     int getForca(void);
-    bool getIsEnemy(void);
-    vector<Vivo*> getInimigos(void);
+    int getRaioVisao(void);
+    Rgba getRgba(void);
     State getEstado(void);
+    SDL_Rect* getPersonagem(void);
+    TipoMonstro getTipoMonstro(void);
 
-    void setId(int id);
     void setVidaMaxima(int vidaMaxima);
     void setVida(int vida);
     void setVelocidade(int velocidade);
     void setForca(int forca);
-    void setIsEnemy(bool isEnemy);
-    void setInimigos(vector<Vivo*> inimigos);
+    void setRaioVisao(int raioVisao);
     void setEstado(State estado);
-
-    SDL_Rect* getPersonagem(void);
-    Rgba getRgba(void);
-
-    void machine();
+    void setTipoMonstro(TipoMonstro tipoMonstro);
 };
 
 #endif

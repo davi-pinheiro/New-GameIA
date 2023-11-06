@@ -19,7 +19,7 @@ private:
     SDL_Window* janela;
     SDL_Renderer* renderizador;
     SDL_Texture* textura;
-    Rgba background;
+    BackMap* mundo;
     int altura;
     int largura;
 
@@ -32,19 +32,17 @@ public:
     SDL_Window* getJanela();
     SDL_Texture* getTextura();
 
+    BackMap* getMundo(void);
+    void setMundo(BackMap* mundo);
+
     void setAltura(int altura);
     void setLargura(int largura);
 
     void backgroundColor(Tempo& tempo);
     void frontgroundColor(Rgba rgba);
 
-    void renderizarMonsters(vector<Vivo*>& colecao, Camera& camera);
-    void renderizarAllies(vector<Vivo*>& colecao, Camera& camera);
-    void renderizarCollectibles(vector<Coletavel*>& colecao, Camera& camera);
-
-    void renderizarMonsters(BackMap &backMap);
+    void renderizarMonsters();
     void renderizarCollectibles(BackMap &backMap);
-
     void renderizarCharacter(Personagem* personagem);
 
     void renderizar(Vivo* colecao);

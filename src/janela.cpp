@@ -1,15 +1,18 @@
+#include <iostream>
+#include "backMap.h"
 #include "janela.h"
 #include "vampiro.h"
 #include "guerreiro.h"
 #include "denteAlho.h"
-#include <iostream>
+
+using std::cout;
+using std::endl;
 
 Janela::Janela(int mapaAltura, int mapaLargura, int telaAltura, int telaLargura)
 {    
     janela = SDL_CreateWindow("GameIA", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, telaLargura, telaAltura, SDL_WINDOW_HIDDEN);
 
     renderizador = SDL_CreateRenderer(janela, -1, SDL_RENDERER_ACCELERATED);
-    background.setRgba(195, 195, 195, 195);
 
     textura = SDL_CreateTexture(renderizador, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_TARGET, mapaLargura, mapaAltura);
 }
@@ -39,6 +42,16 @@ SDL_Texture* Janela::getTextura()
     return textura;
 }
 
+BackMap* Janela::getMundo(void)
+{
+    return mundo;
+}
+
+void Janela::setMundo(BackMap* mundo)
+{
+    this->mundo = mundo;
+}
+
 void Janela::setAltura(int altura)
 {
     this->altura = altura;
@@ -52,7 +65,7 @@ void Janela::setLargura(int largura)
 
 void Janela::backgroundColor(Tempo& tempo)
 {
-    tempo.changeStateDay();
+    /*tempo.changeStateDay();
     switch (tempo.getEstadoDia())
     {
     case MORNING:
@@ -115,15 +128,15 @@ void Janela::backgroundColor(Tempo& tempo)
     
     default:
         break;
-    }
+    }*/
 
-    frontgroundColor(background);
+    frontgroundColor(mundo->getBackground());
     SDL_RenderClear(renderizador);
 
-    int color = 255 - background.getR();
-    Rgba newColor(color, color/2, color/2, 255);
+    int color = 255 - mundo->getBackground().getR();
+    Rgba newColor(color, color, color, 255);
 
-    frontgroundColor(color);
+    frontgroundColor(newColor);
     SDL_RenderDrawLine(renderizador, 0, 1079, 3240, 1079);
     SDL_RenderDrawLine(renderizador, 0, 2159, 3240, 2159);
     SDL_RenderDrawLine(renderizador, 1079, 0, 1079, 3240);
@@ -135,983 +148,6 @@ void Janela::frontgroundColor(Rgba rgba)
     SDL_SetRenderDrawColor(renderizador, rgba.getR(), rgba.getG(), rgba.getB(), rgba.getA());
 }
 
-void Janela::renderizarMonsters(vector<Vivo*>& colecao, Camera& camera)
-{
-    for(int i = 0; i < (int)colecao.size(); i++)
-    {
-        if(camera.getCamera()->x < 1080)
-        {
-            if(camera.getCamera()->y < 1080)
-            {
-                if((colecao[i]->getPersonagem()->x < 1080) &&
-                (colecao[i]->getPersonagem()->y < 1080))
-                {
-                    ((Vampiro*) colecao[i])->machine();  
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 1080) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 1080))
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y < 1080))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x < 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y < 1080))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x < 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if((camera.getCamera()->y >= 1080) &&
-            (camera.getCamera()->y < 2160))
-            {
-                if((colecao[i]->getPersonagem()->x < 1080) &&
-                (colecao[i]->getPersonagem()->y >= 1080) &&
-                (colecao[i]->getPersonagem()->y < 2160))
-                {
-                    ((Vampiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 1080) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 2160))
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x < 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }                    
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 1080))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x < 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 1080))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if(camera.getCamera()->y >= 2160)
-            {
-                if((colecao[i]->getPersonagem()->x < 1080) &&
-                (colecao[i]->getPersonagem()->y >= 2160))
-                {
-                    ((Vampiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->x + camera.getCamera()->w >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-        }
-        else if((camera.getCamera()->x >= 1080) &&
-        (camera.getCamera()->x < 2160))
-        {
-            if(camera.getCamera()->y < 1080)
-            {
-                if((colecao[i]->getPersonagem()->x >= 1080) &&
-                (colecao[i]->getPersonagem()->x < 2160) &&
-                (colecao[i]->getPersonagem()->y < 1080))
-                {
-                    ((Vampiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 2160) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 1080))
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y < 1080))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y < 1080))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 1080))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if((camera.getCamera()->y >= 1080) &&
-            (camera.getCamera()->y < 2160))
-            {
-                if((colecao[i]->getPersonagem()->x >= 1080) &&
-                (colecao[i]->getPersonagem()->x < 2160) &&
-                (colecao[i]->getPersonagem()->y >= 1080) &&
-                (colecao[i]->getPersonagem()->y < 2160))
-                {
-                    ((Vampiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 2160) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 2160))
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if(camera.getCamera()->y >= 2160)
-            {
-                if((colecao[i]->getPersonagem()->x >= 1080) &&
-                (colecao[i]->getPersonagem()->x < 2160) &&
-                (colecao[i]->getPersonagem()->y >= 2160))
-                {
-                    ((Vampiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->x + camera.getCamera()->w >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-        }
-        else if(camera.getCamera()->x >= 2160)
-        {
-            if(camera.getCamera()->y < 1080)
-            {
-                if((colecao[i]->getPersonagem()->x >= 2160) &&
-                (colecao[i]->getPersonagem()->y < 1080))
-                {
-                    ((Vampiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->y + camera.getCamera()->h >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if((camera.getCamera()->y >= 1080) &&
-            (camera.getCamera()->y < 2160))
-            {
-                if((colecao[i]->getPersonagem()->x >= 2160) &&
-                (colecao[i]->getPersonagem()->y >= 1080) &&
-                (colecao[i]->getPersonagem()->y < 2160))
-                {
-                    ((Vampiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->y + camera.getCamera()->h >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Vampiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if(camera.getCamera()->y >= 2160)
-            {
-                if((colecao[i]->getPersonagem()->x >= 2160) &&
-                (colecao[i]->getPersonagem()->y >= 2160))
-                {
-                    ((Vampiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-            }
-        }
-    }
-}
-
-void Janela::renderizarAllies(vector<Vivo*>& colecao, Camera& camera)
-{    
-    for(int i = 0; i < (int) colecao.size()-1; i++)
-    {
-        if(camera.getCamera()->x < 1080)
-        {
-            if(camera.getCamera()->y < 1080)
-            {
-                if((colecao[i]->getPersonagem()->x < 1080) &&
-                (colecao[i]->getPersonagem()->y < 1080))
-                {
-                    ((Guerreiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 1080) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 1080))
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y < 1080))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x < 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y < 1080))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x < 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if((camera.getCamera()->y >= 1080) &&
-            (camera.getCamera()->y < 2160))
-            {
-                if((colecao[i]->getPersonagem()->x < 1080) &&
-                (colecao[i]->getPersonagem()->y >= 1080) &&
-                (colecao[i]->getPersonagem()->y < 2160))
-                {
-                    ((Guerreiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 1080) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 2160))
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x < 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }                    
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 1080))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x < 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 1080))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if(camera.getCamera()->y >= 2160)
-            {
-                if((colecao[i]->getPersonagem()->x < 1080) &&
-                (colecao[i]->getPersonagem()->y >= 2160))
-                {
-                    ((Guerreiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->x + camera.getCamera()->w >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-        }
-        else if((camera.getCamera()->x >= 1080) &&
-        (camera.getCamera()->x < 2160))
-        {
-            if(camera.getCamera()->y < 1080)
-            {
-                if((colecao[i]->getPersonagem()->x >= 1080) &&
-                (colecao[i]->getPersonagem()->x < 2160) &&
-                (colecao[i]->getPersonagem()->y < 1080))
-                {
-                    ((Guerreiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 2160) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 1080))
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y < 1080))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y < 1080))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->y >= 1080))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if((camera.getCamera()->y >= 1080) &&
-            (camera.getCamera()->y < 2160))
-            {
-                if((colecao[i]->getPersonagem()->x >= 1080) &&
-                (colecao[i]->getPersonagem()->x < 2160) &&
-                (colecao[i]->getPersonagem()->y >= 1080) &&
-                (colecao[i]->getPersonagem()->y < 2160))
-                {
-                    ((Guerreiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 2160) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 2160))
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 1080) &&
-                    (colecao[i]->getPersonagem()->x < 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if(camera.getCamera()->y >= 2160)
-            {
-                if((colecao[i]->getPersonagem()->x >= 1080) &&
-                (colecao[i]->getPersonagem()->x < 2160) &&
-                (colecao[i]->getPersonagem()->y >= 2160))
-                {
-                    ((Guerreiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->x + camera.getCamera()->w >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-        }
-        else if(camera.getCamera()->x >= 2160)
-        {
-            if(camera.getCamera()->y < 1080)
-            {
-                if((colecao[i]->getPersonagem()->x >= 2160) &&
-                (colecao[i]->getPersonagem()->y < 1080))
-                {
-                    ((Guerreiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->y + camera.getCamera()->h >= 1080)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 1080) &&
-                    (colecao[i]->getPersonagem()->y < 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if((camera.getCamera()->y >= 1080) &&
-            (camera.getCamera()->y < 2160))
-            {
-                if((colecao[i]->getPersonagem()->x >= 2160) &&
-                (colecao[i]->getPersonagem()->y >= 1080) &&
-                (colecao[i]->getPersonagem()->y < 2160))
-                {
-                    ((Guerreiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->y + camera.getCamera()->h >= 2160)
-                {
-                    if((colecao[i]->getPersonagem()->x >= 2160) &&
-                    (colecao[i]->getPersonagem()->y >= 2160))
-                    {
-                        ((Guerreiro*)colecao[i])->machine();
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if(camera.getCamera()->y >= 2160)
-            {
-                if((colecao[i]->getPersonagem()->x >= 2160) &&
-                (colecao[i]->getPersonagem()->y >= 2160))
-                {
-                    ((Guerreiro*)colecao[i])->machine();
-                    renderizar(colecao[i]);
-                }
-            }
-        }
-    }
-}
-
-void Janela::renderizarCollectibles(vector<Coletavel*>& colecao, Camera& camera)
-{
-    for(int i = 0; i < (int) colecao.size()-1; i++)
-    {
-        if(camera.getCamera()->x < 1080)
-        {
-            if(camera.getCamera()->y < 1080)
-            {
-                if((colecao[i]->getColetavel()->x < 1080) &&
-                (colecao[i]->getColetavel()->y < 1080))
-                {
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 1080) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 1080))
-                {
-                    if((colecao[i]->getColetavel()->x >= 1080) &&
-                    (colecao[i]->getColetavel()->x < 2160) &&
-                    (colecao[i]->getColetavel()->y < 1080))
-                    {
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getColetavel()->x < 1080) &&
-                    (colecao[i]->getColetavel()->y >= 1080) &&
-                    (colecao[i]->getColetavel()->y < 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getColetavel()->x >= 1080) &&
-                    (colecao[i]->getColetavel()->x < 2160) &&
-                    (colecao[i]->getColetavel()->y >= 1080) &&
-                    (colecao[i]->getColetavel()->y < 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 1080)
-                {
-                    if((colecao[i]->getColetavel()->x >= 1080) &&
-                    (colecao[i]->getColetavel()->x < 2160) &&
-                    (colecao[i]->getColetavel()->y < 1080))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 1080)
-                {
-                    if((colecao[i]->getColetavel()->x < 1080) &&
-                    (colecao[i]->getColetavel()->y >= 1080) &&
-                    (colecao[i]->getColetavel()->y < 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if((camera.getCamera()->y >= 1080) &&
-            (camera.getCamera()->y < 2160))
-            {
-                if((colecao[i]->getColetavel()->x < 1080) &&
-                (colecao[i]->getColetavel()->y >= 1080) &&
-                (colecao[i]->getColetavel()->y < 2160))
-                {
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 1080) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 2160))
-                {
-                    if((colecao[i]->getColetavel()->x >= 1080) &&
-                    (colecao[i]->getColetavel()->x < 2160) &&
-                    (colecao[i]->getColetavel()->y >= 1080) &&
-                    (colecao[i]->getColetavel()->y < 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getColetavel()->x < 1080) &&
-                    (colecao[i]->getColetavel()->y >= 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                    if((colecao[i]->getColetavel()->x >= 1080) &&
-                    (colecao[i]->getColetavel()->x < 2160) &&
-                    (colecao[i]->getColetavel()->y >= 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }                    
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 1080)
-                {
-                    if((colecao[i]->getColetavel()->x >= 1080) &&
-                    (colecao[i]->getColetavel()->y >= 1080))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 2160)
-                {
-                    if((colecao[i]->getColetavel()->x < 1080) &&
-                    (colecao[i]->getColetavel()->y >= 1080))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if(camera.getCamera()->y >= 2160)
-            {
-                if((colecao[i]->getColetavel()->x < 1080) &&
-                (colecao[i]->getColetavel()->y >= 2160))
-                {
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->x + camera.getCamera()->w >= 1080)
-                {
-                    if((colecao[i]->getColetavel()->x >= 1080) &&
-                    (colecao[i]->getColetavel()->x < 2160) &&
-                    (colecao[i]->getColetavel()->y >= 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-        }
-        else if((camera.getCamera()->x >= 1080) &&
-        (camera.getCamera()->x < 2160))
-        {
-            if(camera.getCamera()->y < 1080)
-            {
-                if((colecao[i]->getColetavel()->x >= 1080) &&
-                (colecao[i]->getColetavel()->x < 2160) &&
-                (colecao[i]->getColetavel()->y < 1080))
-                {
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 2160) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 1080))
-                {
-                    if((colecao[i]->getColetavel()->x >= 2160) &&
-                    (colecao[i]->getColetavel()->y < 1080))
-                    {
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getColetavel()->x >= 1080) &&
-                    (colecao[i]->getColetavel()->x < 2160) &&
-                    (colecao[i]->getColetavel()->y >= 1080) &&
-                    (colecao[i]->getColetavel()->y < 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getColetavel()->x >= 2160) &&
-                    (colecao[i]->getColetavel()->y >= 1080) &&
-                    (colecao[i]->getColetavel()->y < 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 2160)
-                {
-                    if((colecao[i]->getColetavel()->x >= 2160) &&
-                    (colecao[i]->getColetavel()->y < 1080))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 1080)
-                {
-                    if((colecao[i]->getColetavel()->x >= 1080) &&
-                    (colecao[i]->getColetavel()->y >= 1080))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if((camera.getCamera()->y >= 1080) &&
-            (camera.getCamera()->y < 2160))
-            {
-                if((colecao[i]->getColetavel()->x >= 1080) &&
-                (colecao[i]->getColetavel()->x < 2160) &&
-                (colecao[i]->getColetavel()->y >= 1080) &&
-                (colecao[i]->getColetavel()->y < 2160))
-                {
-                    renderizar(colecao[i]);
-                }
-
-                if((camera.getCamera()->x + camera.getCamera()->w >= 2160) &&
-                (camera.getCamera()->y + camera.getCamera()->h >= 2160))
-                {
-                    if((colecao[i]->getColetavel()->x >= 2160) &&
-                    (colecao[i]->getColetavel()->y >= 1080) &&
-                    (colecao[i]->getColetavel()->y < 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getColetavel()->x >= 1080) &&
-                    (colecao[i]->getColetavel()->x < 2160) &&
-                    (colecao[i]->getColetavel()->y >= 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-
-                    if((colecao[i]->getColetavel()->x >= 2160) &&
-                    (colecao[i]->getColetavel()->y >= 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->x + camera.getCamera()->w >= 2160)
-                {
-                    if((colecao[i]->getColetavel()->x >= 2160) &&
-                    (colecao[i]->getColetavel()->y >= 1080) &&
-                    (colecao[i]->getColetavel()->y < 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-                else if(camera.getCamera()->y + camera.getCamera()->h >= 2160)
-                {
-                    if((colecao[i]->getColetavel()->x >= 1080) &&
-                    (colecao[i]->getColetavel()->x < 2160) &&
-                    (colecao[i]->getColetavel()->y >= 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if(camera.getCamera()->y >= 2160)
-            {
-                if((colecao[i]->getColetavel()->x >= 1080) &&
-                (colecao[i]->getColetavel()->x < 2160) &&
-                (colecao[i]->getColetavel()->y >= 2160))
-                {
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->x + camera.getCamera()->w >= 2160)
-                {
-                    if((colecao[i]->getColetavel()->x >= 2160) &&
-                    (colecao[i]->getColetavel()->y >= 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-        }
-        else if(camera.getCamera()->x >= 2160)
-        {
-            if(camera.getCamera()->y < 1080)
-            {
-                if((colecao[i]->getColetavel()->x >= 2160) &&
-                (colecao[i]->getColetavel()->y < 1080))
-                {
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->y + camera.getCamera()->h >= 1080)
-                {
-                    if((colecao[i]->getColetavel()->x >= 2160) &&
-                    (colecao[i]->getColetavel()->y >= 1080) &&
-                    (colecao[i]->getColetavel()->y < 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if((camera.getCamera()->y >= 1080) &&
-            (camera.getCamera()->y < 2160))
-            {
-                if((colecao[i]->getColetavel()->x >= 2160) &&
-                (colecao[i]->getColetavel()->y >= 1080) &&
-                (colecao[i]->getColetavel()->y < 2160))
-                {
-                    renderizar(colecao[i]);
-                }
-
-                if(camera.getCamera()->y + camera.getCamera()->h >= 2160)
-                {
-                    if((colecao[i]->getColetavel()->x >= 2160) &&
-                    (colecao[i]->getColetavel()->y >= 2160))
-                    {
-                        renderizar(colecao[i]);
-                    }
-                }
-            }
-            else if(camera.getCamera()->y >= 2160)
-            {
-                if((colecao[i]->getColetavel()->x >= 2160) &&
-                (colecao[i]->getColetavel()->y >= 2160))
-                {
-                    renderizar(colecao[i]);
-                }
-            }
-        }
-    }
-}
-
 void Janela::renderizarCharacter(Personagem* personagem)
 {
     frontgroundColor(personagem->getRgba());
@@ -1120,33 +156,38 @@ void Janela::renderizarCharacter(Personagem* personagem)
     SDL_RenderDrawRect(renderizador, personagem->getPersonagem());
 }
 
-void Janela::renderizarMonsters(BackMap &backMap)
+void Janela::renderizarMonsters()
 {
-    for(int i = 0; i < backMap.tamanhoVectorAreas(); i++)
+    cout << mundo->tamanhoVectorVivos() << endl;
+    for(int i = 0; i < mundo->tamanhoVectorAreas(); i++)
     {
-        if(backMap.retornarAreas(i)->isAtivo())
+        cout << "Primeiro for" << endl;
+        if(mundo->retornarAreas(i)->isAtivo())
         {
-            for(int j = 0; j < backMap.tamanhoVectorVivos(); j++)
+            cout << "Primeiro if" << endl;
+            for(int j = 0; j < mundo->tamanhoVectorVivos(); j++)
             {
-                if((backMap.retornarVivos(j)->getPersonagem()->x >= backMap.retornarAreas(i)->getX())&&
-                (backMap.retornarVivos(j)->getPersonagem()->x <  backMap.retornarAreas(i)->getX() + backMap.retornarAreas(i)->getW()))
+                cout << "Segundo for" << endl;
+                if((mundo->retornarVivos(j)->getPersonagem()->x >= mundo->retornarAreas(i)->getX())&&
+                (mundo->retornarVivos(j)->getPersonagem()->x <  mundo->retornarAreas(i)->getX() + mundo->retornarAreas(i)->getW()))
                 {
-                    if((backMap.retornarVivos(j)->getPersonagem()->y >= backMap.retornarAreas(i)->getY())&&
-                    (backMap.retornarVivos(j)->getPersonagem()->y <  backMap.retornarAreas(i)->getY() + backMap.retornarAreas(i)->getH()))
+                    cout << "Segundo if" << endl;
+                    if((mundo->retornarVivos(j)->getPersonagem()->y >= mundo->retornarAreas(i)->getY())&&
+                    (mundo->retornarVivos(j)->getPersonagem()->y <  mundo->retornarAreas(i)->getY() + mundo->retornarAreas(i)->getH()))
                     {
-                        switch (backMap.retornarVivos(j)->getId())
+                        switch (mundo->retornarVivos(j)->getTipoMonstro())
                         {
-                        case 1:
-                            ((Vampiro*)backMap.retornarVivos(j))->machine();
+                        case VAMPIRO:
+                            ((Vampiro*)mundo->retornarVivos(j))->machine(*mundo);
                             break;
-                        case 2:
-                            ((Guerreiro*)backMap.retornarVivos(j))->machine();
+                        case GUERREIRO:
+                            ((Guerreiro*)mundo->retornarVivos(j))->machine(*mundo);
                         
                         default:
                             break;
                         }
-                        //((Vampiro*)backMap.retornarVivos(j))->machine();
-                        renderizar(backMap.retornarVivos(j));
+                        //((Vampiro*)mundo->retornarVivos(j))->machine();
+                        renderizar(mundo->retornarVivos(j));
                     }
                 }
             }
@@ -1155,19 +196,19 @@ void Janela::renderizarMonsters(BackMap &backMap)
 }
 void Janela::renderizarCollectibles(BackMap &backMap)
 {
-    for(int i = 0; i < backMap.tamanhoVectorAreas(); i++)
+    for(int i = 0; i < mundo->tamanhoVectorAreas(); i++)
     {
-        if(backMap.retornarAreas(i)->isAtivo())
+        if(mundo->retornarAreas(i)->isAtivo())
         {
-            for(int j = 0; j < backMap.tamanhoVectorColetaveis(); j++)
+            for(int j = 0; j < mundo->tamanhoVectorColetaveis(); j++)
             {
-                if((backMap.retornarColetaveis(j)->getColetavel()->x >= backMap.retornarAreas(i)->getX())&&
-                (backMap.retornarColetaveis(j)->getColetavel()->x <  backMap.retornarAreas(i)->getX() + backMap.retornarAreas(i)->getW()))
+                if((mundo->retornarColetaveis(j)->getColetavel()->x >= mundo->retornarAreas(i)->getX())&&
+                (mundo->retornarColetaveis(j)->getColetavel()->x <  mundo->retornarAreas(i)->getX() + mundo->retornarAreas(i)->getW()))
                 {
-                    if((backMap.retornarColetaveis(j)->getColetavel()->y >= backMap.retornarAreas(i)->getY())&&
-                    (backMap.retornarColetaveis(j)->getColetavel()->y <  backMap.retornarAreas(i)->getY() + backMap.retornarAreas(i)->getH()))
+                    if((mundo->retornarColetaveis(j)->getColetavel()->y >= mundo->retornarAreas(i)->getY())&&
+                    (mundo->retornarColetaveis(j)->getColetavel()->y <  mundo->retornarAreas(i)->getY() + mundo->retornarAreas(i)->getH()))
                     {
-                        renderizar(backMap.retornarColetaveis(j));
+                        renderizar(mundo->retornarColetaveis(j));
                     }
                 }
             }

@@ -1,5 +1,5 @@
-#include "tempo.h"
 #include <iostream>
+#include "tempo.h"
 
 Tempo::Tempo(int comparador)
 {

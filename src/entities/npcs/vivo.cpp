@@ -1,12 +1,12 @@
 #include "vivo.h"
 
-Vivo::Vivo(int id, int vidaMaxima, int velocidade, int forca, bool isEnemy , int h, int w, int x, int y, Rgba rgba, State estado){
+Vivo::Vivo(int id, int vidaMaxima, int velocidade, int forca, int raioVisao, State estado, int h, int w, int x, int y, TipoMonstro tipoMonstro){
     this->id = id;
     this->vidaMaxima = vidaMaxima;
     this->vida = vidaMaxima;
     this->velocidade = velocidade;
     this->forca = forca;
-    this->isEnemy = isEnemy;
+    this->raioVisao = raioVisao;
     this->estado = estado;
 
     personagem.h = h;
@@ -14,8 +14,10 @@ Vivo::Vivo(int id, int vidaMaxima, int velocidade, int forca, bool isEnemy , int
     personagem.x = x;
     personagem.y = y;
 
-    this->rgba = rgba;
+    this->tipoMonstro = tipoMonstro;
 }
+
+
 
 int Vivo::getId(void)
 {
@@ -38,24 +40,32 @@ int Vivo::getForca(void){
     return forca;
 }
 
-bool Vivo::getIsEnemy(void){
-    return isEnemy;
-}
-
-vector<Vivo*> Vivo::getInimigos(void)
+int Vivo::getRaioVisao(void)
 {
-    return inimigos;
+    return raioVisao;
 }
 
-State Vivo::getEstado()
+Rgba Vivo::getRgba(void)
+{
+    return rgba;
+}
+
+State Vivo::getEstado(void)
 {
     return estado;
 }
 
-void Vivo::setId(int id)
+SDL_Rect* Vivo::getPersonagem(void)
 {
-    this->id = id;
+    return &personagem;
 }
+
+TipoMonstro Vivo::getTipoMonstro(void)
+{
+    return tipoMonstro;
+}
+
+
 
 void Vivo::setVidaMaxima(int vidaMaxima){
     vida = (int) (vida * vidaMaxima) / this->vidaMaxima;
@@ -74,14 +84,9 @@ void Vivo::setForca(int forca){
     this->forca = forca;
 }
 
-void Vivo::setIsEnemy(bool isEnemy)
+void Vivo::setRaioVisao(int raioVisao)
 {
-    this->isEnemy = isEnemy;
-}
-
-void Vivo::setInimigos(vector<Vivo*> inimigos)
-{
-    this->inimigos = inimigos;
+    this->raioVisao = raioVisao;
 }
 
 void Vivo::setEstado(State estado)
@@ -89,19 +94,7 @@ void Vivo::setEstado(State estado)
     this->estado = estado;
 }
 
-
-SDL_Rect* Vivo::getPersonagem(void)
+void Vivo::setTipoMonstro(TipoMonstro tipoMonstro)
 {
-    return &personagem;
+    this->tipoMonstro = tipoMonstro;
 }
-
-Rgba Vivo::getRgba(void)
-{
-    return rgba;
-}
-
-void Vivo::machine(void)
-{
-    
-}
-

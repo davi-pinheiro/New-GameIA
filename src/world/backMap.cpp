@@ -2,6 +2,7 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+#include "tipoMonstro.h"
 #include "backMap.h"
 #include "denteAlho.h"
 #include "subArea.h"
@@ -11,6 +12,13 @@
 using std::rand;
 using std::cout;
 using std::endl;
+
+BackMap::BackMap(void)
+{
+    ativo = true;
+    proximoMundo = ANY_WORLD;
+    background.setRgba(255,255,255,255);
+}
 
 Area* BackMap::retornarAreas(int indice)
 {
@@ -24,6 +32,7 @@ Coletavel* BackMap::retornarColetaveis(int indice)
 {
     return coletaveis[indice];
 }
+
 int BackMap::tamanhoVectorAreas(void)
 {
     return (int) areas.size();
@@ -61,14 +70,13 @@ void BackMap::generateAreas(int tamanhoMapa, int proporcaoArea)
         }
     }
 }
-
 void BackMap::generateEntities()
 {
     int porcentagemColetaveis = (pow(tamanhoMapa, 2) / pow(10, 2)) * 1 / 200;
     int porcentagemInimigos = (pow(tamanhoMapa, 2) / pow(20, 2)) * 1 / 200;
     int porcentagemAliados = (pow(tamanhoMapa, 2) / pow(20, 2)) * 1 / 400;
     
-    int x, y;
+    int x, y, id;
     int distancia = 0;
     bool possible = false;
 
@@ -124,7 +132,26 @@ void BackMap::generateEntities()
             }
         }while (possible);
 
-        Vampiro* dracula = new Vampiro(1, 50, 5, 3, true, 20, 20, x, y, VAGAR);
+        do{
+            id = rand() % 2000;
+            for(int i = 0; i < (int)vivos.size(); i++)
+            {
+                if(id == vivos[i]->getId())
+                {
+                    break;
+                }
+                else
+                {
+                    if(i == (int)vivos.size() - 1)
+                    {
+                        possible = false;
+                    }
+                }
+            }
+
+        }while(possible);
+
+        Vampiro* dracula = new Vampiro(id, 50, 5, 3, 135, VAGAR, 20, 20, x, y, VAMPIRO);
         vivos.push_back(dracula);
         
         possible = true;
@@ -153,13 +180,31 @@ void BackMap::generateEntities()
             }
         }while (possible);
 
-        Guerreiro* cavaleiro = new Guerreiro(2, 50, 5, 3, false, 20, 20, x, y, VAGAR);
+        do{
+            id = rand() % 2000;
+            for(int i = 0; i < (int)vivos.size(); i++)
+            {
+                if(id == vivos[i]->getId())
+                {
+                    break;
+                }
+                else
+                {
+                    if(i == (int)vivos.size() - 1)
+                    {
+                        possible = false;
+                    }
+                }
+            }
+
+        }while(possible);
+
+        Guerreiro* cavaleiro = new Guerreiro(id, 50, 5, 3, 67, VAGAR, 20, 20, x, y, GUERREIRO);
         vivos.push_back(cavaleiro);
         
         possible = true;
     }
 }
-
 void BackMap::updateAreas(Camera &camera)
 {
     for(int i = 0; i < (int)areas.size(); i++)
@@ -206,3 +251,38 @@ void BackMap::updateAreas(Camera &camera)
         }
     }
 }
+void BackMap::deleteVivo(int indice)
+{
+    vivos.erase(vivos.begin() + indice);
+}
+
+bool BackMap::isAtivo()
+{
+    return ativo;
+}
+
+TipoMundo BackMap::getTipoMundo(void)
+{
+    return tipoMundo;
+}
+
+TipoMundo BackMap::getProximoMundo(void)
+{
+    return proximoMundo;
+}
+
+Rgba BackMap::getBackground()
+{
+    return background;
+}
+
+void BackMap::setAtivo(bool ativo)
+{
+    this->ativo = ativo;
+}
+
+void BackMap::setProximoMundo(TipoMundo tipoMundo)
+{
+    proximoMundo = tipoMundo;
+}
+

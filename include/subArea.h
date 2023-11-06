@@ -9,6 +9,7 @@ class SubArea
         SDL_Rect* subArea;
         int umidade;
         int temperatura;
+        bool barreira;
     public:
         SubArea(int x, int y , int w, int h, int umidade, int temperatura);
 
@@ -18,6 +19,7 @@ class SubArea
         int getH(void);
         int getUmidade(void);
         int getTemperatura(void);
+        bool isBarreira();
 
         void setX(int x);
         void setY(int y);
@@ -25,6 +27,7 @@ class SubArea
         void setH(int h);
         void setUmidade(int umidade);
         void setTemperatura(int temperatura);
+        void setBarreira(bool barreira);
 };
 
 #endif

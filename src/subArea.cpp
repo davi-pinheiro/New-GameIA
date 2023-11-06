@@ -37,6 +37,12 @@ int SubArea::getTemperatura(void)
 {
     return temperatura;
 }
+bool SubArea::isBarreira()
+{
+    return barreira;
+}
+
+
 
 void SubArea::setX(int x)
 {
@@ -61,4 +67,8 @@ void SubArea::setUmidade(int umidade)
 void SubArea::setTemperatura(int temperatura)
 {
     this->temperatura = temperatura;
+}
+void SubArea::setBarreira(bool barreira)
+{
+    this->barreira = barreira;
 }
