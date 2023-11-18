@@ -5,6 +5,7 @@
 #include "tipoMundo.h"
 #include "camera.h"
 #include "area.h"
+#include "subArea.h"
 #include "coletavel.h"
 #include "vivo.h"
 #include "rgba.h"
@@ -28,6 +29,7 @@ class BackMap{
         Area* retornarAreas(int indice);
         Vivo* retornarVivos(int indice);
         Coletavel* retornarColetaveis(int indice);
+        SubArea* retornarSubArea(int x, int y);
 
         int tamanhoVectorAreas(void);
         int tamanhoVectorVivos(void);

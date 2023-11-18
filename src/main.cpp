@@ -28,21 +28,11 @@ int main(int argc, char const *argv[])
     Tempo tempo(180);
     Personagem* personagem = new Personagem(3000, 50, 5, 3, 350, NONE, 20, 20, MAPAW/2, MAPAH/2, PLAYER);
 
-    NormalWorld nw;
+    NormalWorld nw(MAPAH, 3, camera, personagem);
     mundos.adicionarMundo(&nw);
-    nw.generateAreas(MAPAH, 3);
-    nw.updateAreas(camera);
-    nw.generateEntities();
 
-    cout << nw.tamanhoVectorVivos() << endl;
-    cout << mundos.getMundo(0)->tamanhoVectorVivos() << endl;
-    cout << endl;
-
-    CaveWorld cw;
+    CaveWorld cw(MAPAH, 3, camera, personagem);
     mundos.adicionarMundo(&cw);
-    cw.generateAreas(MAPAH, 3);
-    cw.updateAreas(camera);
-    cw.generateEntities();
 
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -55,8 +45,6 @@ int main(int argc, char const *argv[])
             janela.setMundo(mundos.getMundo(i));
         }
     }
-
-    cout << janela.getMundo()->tamanhoVectorVivos() << endl;
 
     SDL_ShowWindow(janela.getJanela());
     SDL_Event* evento = new SDL_Event;
@@ -82,10 +70,6 @@ int main(int argc, char const *argv[])
             }
     
         }
-        /*if(mundos.checkMundos())
-        {
-            mundos.mudarMundo(janela);
-        }*/
         janela.getMundo()->updateAreas(camera);
 
         SDL_SetRenderTarget(janela.getRenderizador(), janela.getTextura());
@@ -94,6 +78,7 @@ int main(int argc, char const *argv[])
         janela.renderizarCollectibles(nw);
         janela.renderizarMonsters();
         janela.renderizarCharacter(personagem);
+        janela.renderizarSubAreas();
         
         SDL_SetRenderTarget(janela.getRenderizador(), NULL);
         SDL_RenderCopy(janela.getRenderizador(), janela.getTextura(),camera.getCamera(), camera.getFilme());

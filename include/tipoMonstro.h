@@ -5,7 +5,8 @@ enum TipoMonstro
 {
     PLAYER,
     VAMPIRO,
-    GUERREIRO
+    GUERREIRO,
+    ARANHA
 };
 
 #endif

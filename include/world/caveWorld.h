@@ -14,6 +14,7 @@ class Cave
 
 #include <vector>
 #include "backMap.h"
+#include "personagem.h"
 
 using std::vector;
 
@@ -22,7 +23,10 @@ class CaveWorld : public BackMap
     private:
 
     public:
-    CaveWorld();
+    CaveWorld(int tamanhoMapa, int proporcaoMapa, Camera& camera, Personagem* personagem);
+
+    void generateLabyrinth(void);
+    void generateEntities(void);
 };
 
 #endif

@@ -45,6 +45,8 @@ public:
     void renderizarCollectibles(BackMap &backMap);
     void renderizarCharacter(Personagem* personagem);
 
+    void renderizarSubAreas(void);
+
     void renderizar(Vivo* colecao);
     void renderizar(Coletavel* colecao);
 

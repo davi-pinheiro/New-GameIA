@@ -2,11 +2,13 @@
 #define SUBAREA_H
 
 #include <SDL2/SDL.h>
+#include "rgba.h"
 
 class SubArea 
 {
     private:
         SDL_Rect* subArea;
+        Rgba rgba;
         int umidade;
         int temperatura;
         bool barreira;
@@ -20,6 +22,8 @@ class SubArea
         int getUmidade(void);
         int getTemperatura(void);
         bool isBarreira();
+
+        SDL_Rect* getSubArea();
 
         void setX(int x);
         void setY(int y);

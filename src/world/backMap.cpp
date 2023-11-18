@@ -5,7 +5,6 @@
 #include "tipoMonstro.h"
 #include "backMap.h"
 #include "denteAlho.h"
-#include "subArea.h"
 #include "vampiro.h"
 #include "guerreiro.h"
 
@@ -31,6 +30,34 @@ Vivo* BackMap::retornarVivos(int indice)
 Coletavel* BackMap::retornarColetaveis(int indice)
 {
     return coletaveis[indice];
+}
+
+SubArea* BackMap::retornarSubArea(int x, int y)
+{
+    for(int i = 0; i < tamanhoVectorAreas(); i++)
+    {
+        if((retornarAreas(i)->getX() <= x) &&
+        (retornarAreas(i)->getX() + retornarAreas(i)->getW() > x))
+        {
+            if((retornarAreas(i)->getY() <= y) &&
+            (retornarAreas(i)->getY() + retornarAreas(i)->getH() > y))
+            {
+                for(int j = 0; j < retornarAreas(i)->tamanhoSubAreas(); j++)
+                {
+                    if((retornarAreas(i)->retornarSubArea(j)->getX() <= x) &&
+                    (retornarAreas(i)->retornarSubArea(j)->getX() + retornarAreas(i)->retornarSubArea(j)->getW() > x))
+                    {
+                        if((retornarAreas(i)->retornarSubArea(j)->getY() <= y) &&
+                        (retornarAreas(i)->retornarSubArea(j)->getY() + retornarAreas(i)->retornarSubArea(j)->getH() > y))
+                        {
+                            return retornarAreas(i)->retornarSubArea(j);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return NULL;
 }
 
 int BackMap::tamanhoVectorAreas(void)
@@ -62,7 +89,7 @@ void BackMap::generateAreas(int tamanhoMapa, int proporcaoArea)
             {
                 for (int l = 0; l < numeroSubAreas; l++)
                 {
-                    SubArea* subArea = new SubArea(tamanhoSubArea * l, tamanhoSubArea * k, 30, 30, 50, 25);
+                    SubArea* subArea = new SubArea(tamanhoSubArea * l + tamanhoArea * j, tamanhoSubArea * k + tamanhoArea * i, 30, 30, 50, 25);
                     area->adicionarSubArea(subArea);
                 }
             }
@@ -151,7 +178,7 @@ void BackMap::generateEntities()
 
         }while(possible);
 
-        Vampiro* dracula = new Vampiro(id, 50, 5, 3, 135, VAGAR, 20, 20, x, y, VAMPIRO);
+        Vampiro* dracula = new Vampiro(id, 50, 5, 3, 135, VAGAR, 20, 20, x, y, VAMPIRO, *this);
         vivos.push_back(dracula);
         
         possible = true;
@@ -199,7 +226,7 @@ void BackMap::generateEntities()
 
         }while(possible);
 
-        Guerreiro* cavaleiro = new Guerreiro(id, 50, 5, 3, 67, VAGAR, 20, 20, x, y, GUERREIRO);
+        Guerreiro* cavaleiro = new Guerreiro(id, 50, 5, 3, 67, VAGAR, 20, 20, x, y, GUERREIRO, *this);
         vivos.push_back(cavaleiro);
         
         possible = true;

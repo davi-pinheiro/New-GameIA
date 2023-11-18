@@ -2,7 +2,7 @@
 
 Personagem::Personagem(int id, int vidaMaxima, int velocidade, int forca, int raioVisao, State estado, int h, int w, int x, int y, TipoMonstro tipoMonstro) : Vivo(id, vidaMaxima, velocidade, forca, raioVisao, estado, h, w, x, y, tipoMonstro)
 {
-    this->rgba = Rgba(255, 0, 0, 0);
+    this->rgba = Rgba(255, 0, 0, 255);
 }
 
 void Personagem::controle(SDL_Event* evento, Camera& camera)
@@ -20,7 +20,7 @@ void Personagem::controle(SDL_Event* evento, Camera& camera)
                     camera.getCamera()->y +=10;
                 }
             }
-            getPersonagem()->y -= 10;
+            getPersonagem()->y -= velocidade;
             if(getPersonagem()->y < 0)
             {
                 getPersonagem()->y = 0;
@@ -36,7 +36,7 @@ void Personagem::controle(SDL_Event* evento, Camera& camera)
                 }
             
             }
-            getPersonagem()->x -= 10;
+            getPersonagem()->x -= velocidade;
             if(getPersonagem()->x < 0)
             {
                 getPersonagem()->x = 0;
@@ -51,7 +51,7 @@ void Personagem::controle(SDL_Event* evento, Camera& camera)
                     camera.getCamera()->y -=10;
                 }
             }
-            getPersonagem()->y += 10;
+            getPersonagem()->y += velocidade;
             if(getPersonagem()->y > 3220)
             {
                 getPersonagem()->y = 3220;
@@ -66,7 +66,7 @@ void Personagem::controle(SDL_Event* evento, Camera& camera)
                     camera.getCamera()->x -=10;
                 }
             }
-            getPersonagem()->x += 10;
+            getPersonagem()->x += velocidade;
             if(getPersonagem()->x > 3220)
             {
                 getPersonagem()->x = 3220;

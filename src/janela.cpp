@@ -3,6 +3,7 @@
 #include "janela.h"
 #include "vampiro.h"
 #include "guerreiro.h"
+#include "aranha.h"
 #include "denteAlho.h"
 
 using std::cout;
@@ -158,20 +159,15 @@ void Janela::renderizarCharacter(Personagem* personagem)
 
 void Janela::renderizarMonsters()
 {
-    cout << mundo->tamanhoVectorVivos() << endl;
     for(int i = 0; i < mundo->tamanhoVectorAreas(); i++)
     {
-        cout << "Primeiro for" << endl;
         if(mundo->retornarAreas(i)->isAtivo())
         {
-            cout << "Primeiro if" << endl;
             for(int j = 0; j < mundo->tamanhoVectorVivos(); j++)
             {
-                cout << "Segundo for" << endl;
                 if((mundo->retornarVivos(j)->getPersonagem()->x >= mundo->retornarAreas(i)->getX())&&
                 (mundo->retornarVivos(j)->getPersonagem()->x <  mundo->retornarAreas(i)->getX() + mundo->retornarAreas(i)->getW()))
                 {
-                    cout << "Segundo if" << endl;
                     if((mundo->retornarVivos(j)->getPersonagem()->y >= mundo->retornarAreas(i)->getY())&&
                     (mundo->retornarVivos(j)->getPersonagem()->y <  mundo->retornarAreas(i)->getY() + mundo->retornarAreas(i)->getH()))
                     {
@@ -182,11 +178,14 @@ void Janela::renderizarMonsters()
                             break;
                         case GUERREIRO:
                             ((Guerreiro*)mundo->retornarVivos(j))->machine(*mundo);
+                            break;
+                        case ARANHA:
+                            ((Aranha*)mundo->retornarVivos(j))->execute_tree();
+                            break;
                         
                         default:
                             break;
                         }
-                        //((Vampiro*)mundo->retornarVivos(j))->machine();
                         renderizar(mundo->retornarVivos(j));
                     }
                 }
@@ -214,6 +213,25 @@ void Janela::renderizarCollectibles(BackMap &backMap)
             }
         }
     }
+}
+
+void Janela::renderizarSubAreas(void)
+{
+    for(int i = 0; i < mundo->tamanhoVectorAreas(); i++)
+    {
+        for (int j = 0; j < mundo->retornarAreas(i)->tamanhoSubAreas(); j++)
+        {
+            if(mundo->retornarAreas(i)->retornarSubArea(j)->isBarreira())
+            {
+                frontgroundColor(Rgba(0,0,0,0));
+                SDL_RenderFillRect(renderizador, mundo->retornarAreas(i)->retornarSubArea(j)->getSubArea());
+                frontgroundColor(Rgba(11,11,11,255));
+                SDL_RenderDrawRect(renderizador, mundo->retornarAreas(i)->retornarSubArea(j)->getSubArea());
+            }
+        }
+        
+    }
+    
 }
 
 Janela::~Janela()

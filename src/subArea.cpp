@@ -11,6 +11,9 @@ SubArea::SubArea(int x, int y , int w, int h, int umidade, int temperatura)
 
     this->umidade = umidade;
     this->temperatura = temperatura;
+
+    barreira = false;
+    rgba.setRgba(0, 0, 0, 255);
 }
 
 int SubArea::getX(void)
@@ -42,6 +45,11 @@ bool SubArea::isBarreira()
     return barreira;
 }
 
+
+SDL_Rect* SubArea::getSubArea()
+{
+    return subArea;
+}
 
 
 void SubArea::setX(int x)

@@ -13,7 +13,7 @@ class Vampiro : public Vivo
 private:
     
 public:
-    Vampiro(int id, int vidaMaxima, int velocidade, int forca, int raioVisao, State estado, int h, int w, int x, int y, TipoMonstro tipoMonstro);
+    Vampiro(int id, int vidaMaxima, int velocidade, int forca, int raioVisao, State estado, int h, int w, int x, int y, TipoMonstro tipoMonstro, BackMap mundo);
     bool isNextToEnemy(BackMap& backMap);
     bool isAttackCondition(BackMap& backMap);
     void moveToPlayer(BackMap& backMap);
